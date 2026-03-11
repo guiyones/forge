@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nome do App</title>
+    <meta name="viewport" 
+          content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", 
+                            "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-950 text-white min-h-screen">
+
+    <% if authenticated? %>
+      <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+        <span class="font-bold text-indigo-400 text-lg">Forge</span>
+        <%= button_to "Sair", session_path, method: :delete,
+          class: "text-sm text-gray-400 hover:text-white transition-colors cursor-pointer" %>
+      </nav>
+    <% end %>
+
+    <%= yield %>
+  </body>
+</html>
+
