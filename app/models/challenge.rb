@@ -1,5 +1,6 @@
 class Challenge < ApplicationRecord
   belongs_to :user
+  has_many :checkins, dependent: :destroy
 
   validates :title, presence: true
   validates :duration_days, presence: true, numericality: { greater_than: 0}

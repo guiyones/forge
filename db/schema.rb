@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_182103) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_190303) do
   create_table "challenges", force: :cascade do |t|
     t.datetime "completed_at"
     t.datetime "created_at", null: false
@@ -22,6 +22,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_182103) do
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_challenges_on_user_id"
+  end
+
+  create_table "checkins", force: :cascade do |t|
+    t.integer "challenge_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "day_number"
+    t.string "feeling"
+    t.text "note"
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id"], name: "index_checkins_on_challenge_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -42,5 +52,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_182103) do
   end
 
   add_foreign_key "challenges", "users"
+  add_foreign_key "checkins", "challenges"
   add_foreign_key "sessions", "users"
 end
