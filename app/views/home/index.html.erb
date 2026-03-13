@@ -1,4 +1,99 @@
-<div>
-  <h1 class="font-bold text-4xl">Home#index</h1>
-  <p>Find me in app/views/home/index.html.erb</p>
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-2xl font-bold text-white">Forge</h1>
+    <%= link_to "Novo challenge", new_challenge_path,
+      class: "bg-indigo-600 hover:bg-indigo-500 text-white
+                text-sm font-semibold px-4 py-2 rounded-lg transition-colors" %>
+  </div>
+
+  <div class="flex gap-6 items-start">
+
+    <%# Coluna principal — Challenges %>
+    <div class="flex-1">
+      <% if @active_challenges.empty? %>
+        <div class="text-center py-20">
+          <p class="text-gray-500 mb-4">Nenhum desafio ativo.</p>
+          <%= link_to "Criar seu primeiro desafio", new_challenge_path,
+            class: "text-indigo-400 hover:text-indigo-300" %>
+        </div>
+      <% else %>
+        <div class="space-y-3">
+          <% @active_challenges.each do |challenge| %>
+            <%= link_to challenge_path(challenge),
+              class: "block bg-gray-900 rounded-2xl p-5 hover:bg-gray-800 transition-colors" do %>
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="text-white font-semibold"><%= challenge.title %></h2>
+                <span class="text-xs text-indigo-400">Em andamento</span>
+              </div>
+
+              <div class="flex justify-between text-sm text-gray-500 mb-2">
+                <span><%= challenge.progress %> de <%= challenge.duration_days %> dias</span>
+                <span><%= challenge.progress_percentage %>%</span>
+              </div>
+
+              <div class="w-full bg-gray-800 rounded-full h-1">
+                <div class="bg-indigo-500 h-1 rounded-full"
+                     style="width: <%= challenge.progress_percentage %>%"></div>
+              </div>
+
+              <% if challenge.reward.present? %>
+                <p class="text-xs text-gray-600 mt-3">
+                🎁 <%= challenge.reward.description %>
+                </p>
+              <% end %>
+
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Coluna lateral — Rewards %>
+    <div class="w-72 shrink-0">
+      <h2 class="text-sm font-semibold text-gray-400 mb-3">Rewards</h2>
+
+      <% if @unlocked_rewards.any? %>
+        <div class="space-y-3 mb-4">
+          <% @unlocked_rewards.each do |reward| %>
+            <%= link_to reward_path(reward),
+              class: "block bg-gray-900 rounded-2xl p-4 hover:bg-gray-800 transition-colors
+                        border border-indigo-900/50" do %>
+                        <div class="flex items-start justify-between gap-2">
+                          <div>
+                            <p class="text-xs text-indigo-400 mb-1">Desbloqueado 🎁</p>
+                            <p class="text-white text-sm font-semibold"><%= reward.description %></p>
+                            <p class="text-xs text-gray-500 mt-1"><%= reward.challenge.title %></p>
+                          </div>
+                        </div>
+                      <% end %>
+                    <% end %>
+        </div>
+      <% end %>
+
+      <%# Rewards bloqueados dos challenges ativos %>
+      <% locked_rewards = @active_challenges.map(&:reward).compact.select(&:locked?) %>
+      <% if locked_rewards.any? %>
+        <div class="space-y-3">
+          <% locked_rewards.each do |reward| %>
+            <%= link_to reward_path(reward),
+              class: "block bg-gray-900/50 rounded-2xl p-4 hover:bg-gray-800 transition-colors" do %>
+              <p class="text-xs text-gray-600 mb-1">Bloqueado 🔒</p>
+              <p class="text-gray-400 text-sm font-semibold"><%= reward.description %></p>
+              <p class="text-xs text-gray-600 mt-1"><%= reward.challenge.title %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @unlocked_rewards.empty? && locked_rewards.empty? %>
+        <p class="text-gray-600 text-sm">
+        Nenhum reward ainda.<br>
+        Crie um desafio com recompensa.
+        </p>
+      <% end %>
+    </div>
+
+  </div>
 </div>
+

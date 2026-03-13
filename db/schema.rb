@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_190303) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_175529) do
   create_table "challenges", force: :cascade do |t|
     t.datetime "completed_at"
     t.datetime "created_at", null: false
@@ -34,6 +34,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_190303) do
     t.index ["challenge_id"], name: "index_checkins_on_challenge_id"
   end
 
+  create_table "rewards", force: :cascade do |t|
+    t.integer "challenge_id", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["challenge_id"], name: "index_rewards_on_challenge_id"
+    t.index ["user_id"], name: "index_rewards_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -53,5 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_190303) do
 
   add_foreign_key "challenges", "users"
   add_foreign_key "checkins", "challenges"
+  add_foreign_key "rewards", "challenges"
+  add_foreign_key "rewards", "users"
   add_foreign_key "sessions", "users"
 end

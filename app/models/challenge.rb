@@ -1,6 +1,9 @@
 class Challenge < ApplicationRecord
   belongs_to :user
   has_many :checkins, dependent: :destroy
+  has_one :reward, dependent: :destroy
+
+  accepts_nested_attributes_for :reward, reject_if: :all_blank
 
   validates :title, presence: true
   validates :duration_days, presence: true, numericality: { greater_than: 0}
@@ -12,7 +15,7 @@ class Challenge < ApplicationRecord
     checkins.count
   end
 
-  def progress_porcentage
+  def progress_percentage
     return 0 if duration_days.zero?
     [(progress.to_f / duration_days * 100).round, 100].min 
   end
@@ -39,10 +42,12 @@ class Challenge < ApplicationRecord
 
   def check_status!
     return if completed?
+    return unless started_at.present?
 
     if progress >= duration_days
       update!(status:"completed", completed_at: Time.current)
-    elsif
+      reward&.unlock!
+    elsif expired?
       update!(status: "finished", completed_at: Time.current)
     end
   end

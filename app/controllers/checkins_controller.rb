@@ -6,7 +6,12 @@ class CheckinsController < ApplicationController
   end
 
   def create
-    @checkin = @challenge.checkin.build(checkin_params)
+    if already_checked_in_today?
+      redirect_to @challenge, alert: "Você já fez check-in hoje."
+      return
+    end
+
+    @checkin = @challenge.checkins.build(checkin_params)
     @checkin.day_number = @challenge.progress + 1
 
     if @checkin.save
@@ -19,6 +24,10 @@ class CheckinsController < ApplicationController
 
   private
 
+  def already_checked_in_today?
+    @challenge.checkins.where(created_at: Date.today.all_day).exists?
+  end
+   
   def set_challenge
     @challenge = Current.user.challenges.find(params[:challenge_id])
   end

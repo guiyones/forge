@@ -1,5 +1,5 @@
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: [:show]
+  before_action :set_challenge, only: [:show, :edit, :update, :destroy]
 
   def index
     @challenges = Current.user.challenges.order(created_at: :desc)
@@ -11,16 +11,34 @@ class ChallengesController < ApplicationController
 
   def new
     @challenge = Challenge.new
+    @challenge.build_reward
   end
 
   def create
     @challenge = Current.user.challenges.build(challenge_params)
+    @challenge.reward.user = Current.user if @challenge.reward.present?
 
     if @challenge.save
       redirect_to @challenge, notice: "Desafio criado!"
     else 
       render :new, status: :unprocessable_entity
     end
+  end
+  
+  def edit 
+  end 
+
+  def update
+    if @challenge.update(edit_params)
+      redirect_to @challenge, notice: "Desafio atualizado."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @challenge.destroy
+    redirect_to challenges_path, notice: "Desafio removido"
   end
 
   private 
@@ -30,6 +48,10 @@ class ChallengesController < ApplicationController
   end
 
   def challenge_params
-    params.require(:challenge).permit(:title, :description, :duration_days)
+    params.require(:challenge).permit(:title, :description, :duration_days, reward_attributes: [:description])
+  end
+
+  def edit_params
+    params.require.(:challenge).permit(:title, :description)
   end
 end

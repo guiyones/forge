@@ -39,6 +39,17 @@
             rows: 3,
             placeholder: "opcional — mas ajuda nos dias difíceis" %>
       </div>
+        
+      <div>
+        <%= f.label :reward, "Qual será sua recompensa?", class: "block text-sm text-gray-400 mb-2" %>
+        <%= f.fields_for :reward do |r| %>
+          <%= r.text_field :description,
+            class: "w-full bg-gray-800 text-white rounded-lg px-4 py-3
+                border border-gray-700 focus:outline-none focus:border-indigo-500",
+                placeholder: "ex: comprar aquele tênis que quero" %>
+            <% end %>
+            <p class="text-xs text-gray-600 mt-2">opcional — mas ajuda nos dias difíceis</p>
+      </div>
 
       <%= f.submit "Começar desafio",
           class: "w-full bg-indigo-600 hover:bg-indigo-500 text-white

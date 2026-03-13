@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "rewards/show"
   get "checkins/new"
   get "checkins/create"
   get "challenges/index"
@@ -10,8 +11,14 @@ Rails.application.routes.draw do
   resource :session
   resource :registration, only: [:new, :create]
   resources :passwords, param: :token
-  resources :challenges, only: [:index, :show, :new, :create] do
+  resources :challenges, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     resources :checkins, only: [:new, :create]
+  end
+
+  resources :rewards, only: [:show] do
+    member do
+      patch :redeem
+    end
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
