@@ -1,5 +1,7 @@
 class Challenge < ApplicationRecord
   belongs_to :user
+  belongs_to :quest, optional: true
+
   has_many :checkins, dependent: :destroy
   has_one :reward, dependent: :destroy
 

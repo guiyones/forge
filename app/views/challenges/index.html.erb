@@ -27,6 +27,10 @@
               <span class="text-xs text-indigo-400">Em andamento</span>
             <% end %>
           </div>
+          
+          <% if challenge.quest.present? %>
+            <p class="text-xs text-gray-600 mb-2">↑ Quest: <%= challenge.quest.title %></p>
+          <% end %>
 
           <div class="flex justify-between text-sm text-gray-500 mb-2">
             <span><%= challenge.progress %> de <%= challenge.duration_days %> dias</span>

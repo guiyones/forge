@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "quests/index"
+  get "quests/show"
+  get "quests/new"
+  get "quests/create"
   get "rewards/show"
   get "checkins/new"
   get "checkins/create"
@@ -20,6 +24,8 @@ Rails.application.routes.draw do
       patch :redeem
     end
   end
+
+  resources :quests, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

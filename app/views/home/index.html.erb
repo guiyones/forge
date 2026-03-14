@@ -22,10 +22,15 @@
           <% @active_challenges.each do |challenge| %>
             <%= link_to challenge_path(challenge),
               class: "block bg-gray-900 rounded-2xl p-5 hover:bg-gray-800 transition-colors" do %>
+    
               <div class="flex items-center justify-between mb-3">
                 <h2 class="text-white font-semibold"><%= challenge.title %></h2>
                 <span class="text-xs text-indigo-400">Em andamento</span>
               </div>
+              
+              <% if challenge.quest.present? %>
+                <p class="text-xs text-gray-600 mb-2">↑ Quest: <%= challenge.quest.title %></p>
+              <% end %>
 
               <div class="flex justify-between text-sm text-gray-500 mb-2">
                 <span><%= challenge.progress %> de <%= challenge.duration_days %> dias</span>

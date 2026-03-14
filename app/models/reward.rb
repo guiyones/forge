@@ -1,6 +1,7 @@
 class Reward < ApplicationRecord
   belongs_to :user
   belongs_to :challenge
+  belongs_to :quest, optional: true
 
   validates :description, presence: true
   validates :status, inclusion: { in: %w[locked unlocked redeemed] }

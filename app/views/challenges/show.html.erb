@@ -32,6 +32,16 @@
     <p class="text-gray-400 mb-6"><%= @challenge.description %></p>
   <% end %>
 
+  <% if @challenge.quest.present? %>
+    <div class="mb-6">
+      <%= link_to quest_path(@challenge.quest),
+        class: "inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors" do %>
+        <span>↑ Quest:</span>
+        <span class="font-semibold"><%= @challenge.quest.title %></span>
+      <% end %>
+    </div>
+  <% end %>
+
   <%# Progresso %>
   <div class="bg-gray-900 rounded-2xl p-6 mb-4">
     <div class="flex justify-between text-sm mb-3">

@@ -11,7 +11,8 @@ class ChallengesController < ApplicationController
 
   def new
     @challenge = Challenge.new
-    @challenge.build_reward
+    @challenge.quest_id = params[:quest_id] if params[:quest_id]
+    @challenge.build_reward unless @challenge.quest_id.present?
   end
 
   def create
@@ -48,7 +49,7 @@ class ChallengesController < ApplicationController
   end
 
   def challenge_params
-    params.require(:challenge).permit(:title, :description, :duration_days, reward_attributes: [:description])
+    params.require(:challenge).permit(:title, :description, :duration_days, :quest_id, reward_attributes: [:description])
   end
 
   def edit_params
