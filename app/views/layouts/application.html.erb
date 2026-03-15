@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Nome do App</title>
+    <title>Forge</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Forge">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+      }
+    </script>
   </head>
-
   <body class="bg-gray-950 text-white min-h-screen">
-    
+
     <% if authenticated? %>
       <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-800">
         <%= link_to "Forge", root_path, class: "font-bold text-indigo-400 text-lg" %>
@@ -22,10 +31,10 @@
           <%= link_to "Histórico", history_path, class: "text-sm text-gray-400 hover:text-white transition-colors" %>
         </div>
         <%= button_to "Sair", session_path, method: :delete,
-          class: "text-sm text-gray-400 hover:text-white transition-colors cursor-pointer" %>
+            class: "text-sm text-gray-400 hover:text-white transition-colors cursor-pointer" %>
       </nav>
     <% end %>
-    
+
     <% if notice %>
       <div class="max-w-5xl mx-auto px-4 mt-4">
         <div class="bg-indigo-900/40 text-indigo-300 rounded-lg px-4 py-3 text-sm flex items-center justify-between"

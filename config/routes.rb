@@ -1,16 +1,4 @@
 Rails.application.routes.draw do
-  get "history/index"
-  get "quests/index"
-  get "quests/show"
-  get "quests/new"
-  get "quests/create"
-  get "rewards/show"
-  get "checkins/new"
-  get "checkins/create"
-  get "challenges/index"
-  get "challenges/show"
-  get "challenges/new"
-  get "challenges/create"
   root "home#index"
 
   resource :session
@@ -29,7 +17,9 @@ Rails.application.routes.draw do
   resources :quests, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   
   get "history", to: "history#index", as: :history
-
+  
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "up" => "rails/health#show", as: :rails_health_check
 end
 
