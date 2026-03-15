@@ -3,7 +3,7 @@ services:
     name: forge
     runtime: ruby
     buildCommand: "./bin/render-build.sh"
-    startCommand: "./bin/thrust ./bin/rails server"
+    startCommand: "./bin/thrust ./bin/rails server -b 0.0.0.0 -p ${PORT:-3000}"
     envVars:
       - key: RAILS_MASTER_KEY
         sync: false
