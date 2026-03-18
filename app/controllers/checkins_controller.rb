@@ -11,8 +11,8 @@ class CheckinsController < ApplicationController
       return
     end
 
-    @checkin = @challenge.checkins.build(checkin_params)  
-    @challenge.update!(started_at: Time.current) if @challenge.started_at.nil?
+    @challenge.update_column(:started_at, Time.current) if @challenge.started_at.nil?
+    @checkin = @challenge.checkins.build(checkin_params)
     @checkin.day_number = (Date.current - @challenge.started_at.to_date).to_i + 1
 
     if @checkin.save
