@@ -149,7 +149,7 @@
   <%# Hero %>
   <div class="hero">
     <% display_name = Current.user.name.present? ? Current.user.name : Current.user.email_address.split("@").first %>
-    <p class="hero-name"><%= display_name.capitalize %></p>
+    <p class="hero-name"><%= display_name.titleize %></p>
     <p class="hero-tagline">Bem-vindo ao Evolva, hoje é um novo passo na sua evolução.</p>
     <div class="hero-stats">
       <div class="stat-pill streak">
@@ -395,7 +395,7 @@
 <% if authenticated? %>
   <nav class="bottom-nav">
     <%= link_to root_path, class: "nav-item active" do %>
-      <img src="/icon.png" alt="Evolva" style="width: 24px; height: 24px; border-radius: 6px;">
+      <img src="/icon.png?v=2" alt="Evolva" style="width: 24px; height: 24px; border-radius: 6px;">
       <span>Home</span>
     <% end %>
     <%= link_to challenges_path, class: "nav-item" do %>
