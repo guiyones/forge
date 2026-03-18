@@ -42,15 +42,25 @@
   </div>
 
   <%# Calendário %>
-  <div class="rounded-2xl p-6 mb-4" style="background: #1F2937;">
+  <div class="rounded-2xl p-6 mb-6" style="background: #1F2937">
     <p class="text-sm text-gray-400 mb-4">Histórico</p>
-    <% checked = @challenge.checked_days %>
     <div class="flex flex-wrap gap-2">
+      <% checked = @challenge.checked_days %>
+      <% checkins_by_day = @challenge.checkins.index_by(&:day_number) %>
       <% (1..@challenge.duration_days).each do |day| %>
-        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs"
-             style="<%= checked.include?(day) ? 'background: #6C4DFF; color: white;' : 'background: #374151; color: #6b7280;' %>">
-          <%= day %>
-        </div>
+        <% checkin = checkins_by_day[day] %>
+        <% if checkin %>
+          <%= link_to challenge_checkin_path(@challenge, checkin),
+            class: "w-8 h-8 rounded-full flex items-center justify-center text-xs transition-opacity hover:opacity-80",
+            style: "background: #6C4DFF; color: white;" do %>
+            <%= day %>
+          <% end %>
+        <% else %>
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs"
+               style="background: #374151; color: #6b7280;">
+            <%= day %>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

@@ -54,7 +54,7 @@
                       background: #6C4DFF; color: #fff; font-size: 11px; font-weight: 500;
                       text-decoration: none; white-space: nowrap; transition: background 0.15s; }
   .hoje-checkin-btn:hover { background: #5A3FE6; }
-  .hoje-done-badge { flex-shrink: 0; font-size: 12px; color: #6C4DFF; }
+  .hoje-done-badge { flex-shrink: 0; font-size: 12px; color: #45618f; }
 
   /* Quest card */
   .quest-card { background: #0F172A; border: 0.5px solid rgba(108,77,255,0.2);
@@ -150,7 +150,7 @@
   <div class="hero">
     <% display_name = Current.user.name.present? ? Current.user.name : Current.user.email_address.split("@").first %>
     <p class="hero-name"><%= display_name.capitalize %></p>
-    <p class="hero-tagline"> Bem-vindo ao Evolva, hoje é um novo passo na sua evolução.</p>
+    <p class="hero-tagline">Bem-vindo ao Evolva, hoje é um novo passo na sua evolução.</p>
     <div class="hero-stats">
       <div class="stat-pill streak">
         <span>🔥</span>
@@ -171,7 +171,7 @@
   <div class="day-progress-card">
     <div class="day-progress-header">
       <span class="day-progress-label">Progresso do dia</span>
-      <span class="day-progress-pct"><%= @day_progress %>%</span>
+      <span class="day-progress-pct <%= @day_progress == 100 ? 'complete' : '' %>"><%= @day_progress %>%</span>
     </div>
     <div class="day-progress-track">
       <div class="day-progress-fill" style="width: <%= @day_progress %>%"></div>
@@ -184,7 +184,7 @@
       <span class="section-label">Hoje</span>
       <% pendentes = @today_challenges.reject { |c| @today_checkins.include?(c.id) } %>
       <% if pendentes.empty? && @today_challenges.any? %>
-        <span style="font-size: 12px; color: #34d399;">✓ Dia completo</span>
+        <span style="font-size: 12px; color: #22C55E;">✓ Dia completo</span>
       <% elsif pendentes.any? %>
         <span style="font-size: 12px; color: #6b7280;"><%= pendentes.count %> pendente<%= pendentes.count == 1 ? "" : "s" %></span>
       <% end %>
@@ -196,8 +196,8 @@
       </div>
     <% else %>
       <% pending = @today_challenges.reject { |c| @today_checkins.include?(c.id) } %>
-      <% done = @today_challenges.select { |c| @today_checkins.include?(c.id) } %>
-      <% (pending + done).each do |challenge| %>
+      <% done_list = @today_challenges.select { |c| @today_checkins.include?(c.id) } %>
+      <% (pending + done_list).each do |challenge| %>
         <% done = @today_checkins.include?(challenge.id) %>
         <div class="hoje-card <%= done ? 'done' : '' %>">
           <div class="hoje-card-left">
@@ -232,17 +232,40 @@
 
     <% if @active_quests.any? %>
       <% @active_quests.each do |quest| %>
-        <%= link_to quest_path(quest), class: "quest-card" do %>
-          <div class="quest-card-header">
-            <div style="display: flex; align-items: center;">
-              <span class="quest-icon">📖</span>
-              <span class="quest-title"><%= quest.title %></span>
+        <div class="quest-card">
+          <%= link_to quest_path(quest), style: "text-decoration: none; display: block;" do %>
+            <div class="quest-card-header">
+              <div style="display: flex; align-items: center;">
+                <span class="quest-icon">📖</span>
+                <span class="quest-title"><%= quest.title %></span>
+              </div>
+              <span class="quest-badge"><%= quest.progress %>/<%= quest.total %></span>
             </div>
-            <span class="quest-badge"><%= quest.progress %>/<%= quest.total %></span>
-          </div>
+          <% end %>
+
           <% current = quest.current_challenge %>
           <% if current %>
-            <p class="quest-sub">Agora: <span><%= current.title %></span> · <%= current.progress %>/<%= current.duration_days %> dias</p>
+            <% checked_today = @today_checkins.include?(current.id) %>
+            <div class="challenge-card" style="margin-bottom: 10px;">
+              <%= link_to challenge_path(current), class: "challenge-card-link" do %>
+                <div class="challenge-card-header">
+                  <span class="challenge-title"><%= current.title %></span>
+                  <span class="challenge-badge"><%= current.progress %> / <%= current.duration_days %></span>
+                </div>
+                <div class="challenge-progress-row">
+                  <span><%= current.progress %> / <%= current.duration_days %> dias</span>
+                  <span><%= current.progress_percentage %>%</span>
+                </div>
+                <div class="challenge-track">
+                  <div class="challenge-fill" style="width: <%= current.progress_percentage %>%"></div>
+                </div>
+              <% end %>
+              <% if checked_today %>
+                <span class="challenge-checkin">✓ feito hoje</span>
+              <% else %>
+                <%= link_to "Check-in de hoje →", new_challenge_checkin_path(current), class: "challenge-checkin-link" %>
+              <% end %>
+            </div>
           <% elsif quest.next_challenge_available? %>
             <p class="quest-sub" style="color: #818cf8;">Pronto para o próximo desafio</p>
           <% elsif quest.total == 0 %>
@@ -250,6 +273,7 @@
           <% else %>
             <p class="quest-sub">Nenhum desafio ativo</p>
           <% end %>
+
           <% if quest.total > 0 %>
             <div class="quest-progress-row">
               <span>Progresso</span>
@@ -259,7 +283,7 @@
               <div class="quest-fill" style="width: <%= quest.progress_percentage %>%"></div>
             </div>
           <% end %>
-        <% end %>
+        </div>
       <% end %>
     <% else %>
       <div class="empty">
@@ -364,5 +388,30 @@
       </div>
     <% end %>
   </div>
+
 </div>
+
+<%# Bottom nav mobile %>
+<% if authenticated? %>
+  <nav class="bottom-nav">
+    <%= link_to root_path, class: "nav-item active" do %>
+      <img src="/icon.png" alt="Evolva" style="width: 24px; height: 24px; border-radius: 6px;">
+      <span>Home</span>
+    <% end %>
+    <%= link_to challenges_path, class: "nav-item" do %>
+      <span class="nav-icon">⚔️</span>
+      <span>Desafios</span>
+    <% end %>
+    <%= link_to quests_path, class: "nav-item" do %>
+      <span class="nav-icon">📖</span>
+      <span>Jornadas</span>
+    <% end %>
+    <%= link_to history_path, class: "nav-item" do %>
+      <span class="nav-icon">📋</span>
+      <span>Histórico</span>
+    <% end %>
+  </nav>
+<% end %>
+
+
 

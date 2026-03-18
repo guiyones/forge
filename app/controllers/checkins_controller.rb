@@ -21,6 +21,11 @@ class CheckinsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+  
+  def show
+    @checkin = @challenge.checkins.find(params[:id])
+  end
+
 
   private
 

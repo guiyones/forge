@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resource :registration, only: [:new, :create]
   resources :passwords, param: :token
   resources :challenges, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
-    resources :checkins, only: [:new, :create]
+    resources :checkins, only: [:new, :create, :show]
   end
 
   resources :rewards, only: [:show] do
