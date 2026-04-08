@@ -27,11 +27,24 @@
       <% end %>
     </div>
   <% end %>
+    
+  <% if @challenge.tags.any? %>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+      <% @challenge.tags.each do |tag| %>
+        <span style="display: inline-flex; align-items: center; gap: 4px;
+                     padding: 4px 10px; border-radius: 20px; font-size: 11px;
+                     border: 0.5px solid rgba(108,77,255,0.3); color: #6C4DFF;
+                     background: rgba(108,77,255,0.1);">
+          <%= tag.icon %> <%= tag.name %>
+        </span>
+      <% end %>
+    </div>
+  <% end %>
 
   <% if @challenge.description.present? %>
     <p class="text-gray-400 mb-6"><%= @challenge.description %></p>
   <% end %>
-
+    
   <%# Progresso %>
   <div class="rounded-2xl p-6 mb-4" style="background: #1F2937;">
     <div class="flex justify-between text-sm mb-3">

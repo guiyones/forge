@@ -56,7 +56,12 @@ class ChallengesController < ApplicationController
   end
 
   def challenge_params
-    params.require(:challenge).permit(:title, :description, :duration_days, :quest_id, :challenge_type, reward_attributes: [:description])
+    params.require(:challenge).permit(
+      :title, :description, :duration_days, :quest_id, :challenge_type, 
+      tag_ids: [],
+      reward_attributes: [:description]
+    )
+
   end
 
   def edit_params

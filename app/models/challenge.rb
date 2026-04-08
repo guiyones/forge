@@ -7,6 +7,8 @@ class Challenge < ApplicationRecord
   has_many :challenge_participants, dependent: :destroy
   has_many :participants, through: :challenge_participants, source: :user
   has_many :child_challenges, class_name: "Challenge", foreign_key: :parent_challenge_id
+  has_many :challenge_tags, dependent: :destroy
+  has_many :tags, through: :challenge_tags
   has_one :reward, dependent: :destroy
 
   accepts_nested_attributes_for :reward, reject_if: :all_blank

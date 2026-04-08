@@ -1,9 +1,23 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+tags = [
+  { name: "Saúde", icon: "💪" },
+  { name: "Alimentação", icon: "🥗" },
+  { name: "Exercício", icon: "🏃" },
+  { name: "Leitura", icon: "📚" },
+  { name: "Estudo", icon: "🎓" },
+  { name: "Produtividade", icon: "⚡" },
+  { name: "Finanças", icon: "💰" },
+  { name: "Sono", icon: "😴" },
+  { name: "Meditação", icon: "🧘" },
+  { name: "Criatividade", icon: "🎨" },
+  { name: "Relacionamentos", icon: "❤️" },
+  { name: "Foco", icon: "🎯" },
+]
+
+tags.each do |tag|
+  Tag.find_or_create_by!(name: tag[:name]) do |t|
+    t.icon = tag[:icon]
+  end
+end
+
+puts "#{Tag.count} tags criadas."
+
