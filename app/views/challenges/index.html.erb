@@ -22,10 +22,20 @@
               <span class="text-xs" style="color: #22C55E;">✓ Concluído</span>
             <% elsif challenge.finished? %>
               <span class="text-xs text-gray-500">Encerrado</span>
+            <% elsif challenge.planned? %>
+              <span class="text-xs text-gray-500">Planejado</span>
+            <% elsif challenge.paused? %>
+              <span class="text-xs" style="color: #fb923c;">⏸ Pausado</span>
+            <% elsif challenge.focused? %>
+              <span class="text-xs" style="color: #6C4DFF;">🔵 Foco</span>
             <% else %>
               <span class="text-xs" style="color: #6C4DFF;">Em andamento</span>
             <% end %>
           </div>
+
+          <% if challenge.quest.present? %>
+            <p class="text-xs text-gray-500 mb-2">Jornada: <span style="color: #6C4DFF;"><%= challenge.quest.title %></span></p>
+          <% end %>
 
           <div class="flex justify-between text-xs text-gray-500 mb-2">
             <span><%= challenge.progress %> de <%= challenge.duration_days %> dias</span>

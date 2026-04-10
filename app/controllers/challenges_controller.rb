@@ -2,7 +2,7 @@ class ChallengesController < ApplicationController
   before_action :set_challenge, only: [:show, :edit, :update, :destroy]
 
   def index
-    @challenges = Current.user.challenges.order(created_at: :desc)
+    @challenges = Current.user.challenges.where(quest_id: nil).order(created_at: :desc)
   end
 
   def show
@@ -11,8 +11,10 @@ class ChallengesController < ApplicationController
 
   def new
     @challenge = Challenge.new
-    @challenge.challenge_type == params[:type] || "solo"
+    @challenge.quest_id = params[:quest_id] if params[:quest_id]
+    @challenge.challenge_type = params[:type] || "solo"
     @challenge.build_reward
+    @active_quests = Current.user.quests.where(status: "active").order(created_at: :desc)
   end
 
   def create

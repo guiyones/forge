@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # resources :quests, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  resources :quests, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   
   get "history", to: "history#index", as: :history
   

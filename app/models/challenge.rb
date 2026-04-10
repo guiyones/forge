@@ -15,7 +15,7 @@ class Challenge < ApplicationRecord
 
   validates :title, presence: true
   validates :duration_days, presence: true, numericality: { greater_than: 0}
-  validates :status, inclusion: { in: %w[active completed finished] }
+  validates :status, inclusion: { in: %w[planned active paused completed finished] }
 
   before_validation :set_defaults, on: :create
   before_create :generate_invite_token
@@ -59,6 +59,26 @@ class Challenge < ApplicationRecord
     status == "active"
   end
 
+  def planned?
+    status == "planned"
+  end
+
+  def paused?
+    status == "paused"
+  end
+
+  def focused?
+    active? && quest_id.present?
+  end
+
+  def activate_as_focus!
+    return unless quest.present?
+    quest.challenges.where(status: "active").each do |c|
+      c.update!(status: "paused")
+    end
+    update!(status: "active", started_at: Time.current)
+  end
+
   def current_day
     return 1 unless started_at.present?
     (Date.current - started_at.to_date).to_i + 1
@@ -81,11 +101,11 @@ class Challenge < ApplicationRecord
 
     if progress >= duration_days
       update!(status: "completed", completed_at: Time.current)
-      if solo?
-        reward&.unlock!
-      else 
+      reward&.unlock!
+      if shared?
         root_challenge.reward&.unlock! if root_challenge.all_participants_completed?
       end
+      quest&.check_status!
     elsif expired? && progress < duration_days
       update!(status: "finished", completed_at: Time.current)
     end
@@ -102,7 +122,7 @@ class Challenge < ApplicationRecord
   private 
 
   def set_defaults
-    self.status ||= "active"
+    self.status ||= quest_id.present? ? "planned" : "active"
   end
 
   def generate_invite_token

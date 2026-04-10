@@ -31,12 +31,12 @@ class Quest < ApplicationRecord
     status == "completed"
   end
 
-  def current_challenge
+  def focused_challenge
     challenges.find_by(status: "active")
   end
 
-  def next_challenge_available?
-    current_challenge.nil? && !completed?
+  def can_add_challenge?
+    !completed?
   end
 
   def check_status!
